@@ -15,11 +15,11 @@ use naia_bevy_demo_shared::protocol::{Color, ColorValue, Protocol, ProtocolKind}
 const SQUARE_SIZE: f32 = 32.0;
 
 pub fn connect_event(client: Client<Protocol>) {
-    info!("Client connected to: {}", client.server_address());
+    info!("Client connected to: {:?}", client.server_address());
 }
 
 pub fn disconnect_event(client: Client<Protocol>) {
-    info!("Client disconnected from: {}", client.server_address());
+    info!("Client disconnected from: {:?}", client.server_address());
 }
 
 pub fn spawn_entity_event(

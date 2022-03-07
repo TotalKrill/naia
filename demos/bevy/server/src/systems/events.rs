@@ -70,22 +70,22 @@ pub fn connection_event<'world, 'state>(
             Color::new(color_value)
         };
 
-        // Spawn entity
-        let entity = server
-            // Spawn new Square Entity
-            .spawn()
-            // Add Entity to main Room
-            .enter_room(&global.main_room_key)
-            // Insert Position component
-            .insert(position)
-            // Insert Color component
-            .insert(color)
-            // Set Entity's owner to user
-            .send_message(&user_key, EntityAssignment::new(true))
-            // return Entity id
-            .id();
+        // // Spawn entity
+        // let entity = server
+        //     // Spawn new Square Entity
+        //     .spawn()
+        //     // Add Entity to main Room
+        //     .enter_room(&global.main_room_key)
+        //     // Insert Position component
+        //     .insert(position)
+        //     // Insert Color component
+        //     .insert(color)
+        //     // Set Entity's owner to user
+        //     .send_message(&user_key, EntityAssignment::new(true))
+        //     // return Entity id
+        //     .id();
 
-        global.user_to_prediction_map.insert(*user_key, entity);
+        // global.user_to_prediction_map.insert(*user_key, entity);
     }
 }
 

@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, hash::Hash, marker::PhantomData, net::SocketAddr};
 
-use naia_client_socket::{Packet, ServerAddr, Socket};
+pub use naia_client_socket::{Packet, ServerAddr, Socket};
 pub use naia_shared::{
     ConnectionConfig, ManagerType, Manifest, PacketReader, PacketType, ProtocolKindType,
     Protocolize, ReplicateSafe, SequenceIterator, SharedConfig, SocketConfig, StandardHeader,

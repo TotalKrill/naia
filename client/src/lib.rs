@@ -31,7 +31,7 @@ mod tick_queue;
 
 pub use naia_shared as shared;
 
-pub use client::Client;
+pub use client::{Client, ServerAddr};
 pub use client_config::ClientConfig;
 pub use entity_ref::EntityRef;
 pub use error::NaiaClientError;
