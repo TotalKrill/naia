@@ -6,7 +6,6 @@ use std::{
     sync::{Arc, RwLock},
 };
 
-use slotmap::DenseSlotMap;
 use naia_server_socket::{Packet, ServerAddrs, Socket};
 pub use naia_shared::{
     wrapping_diff, BaseConnection, ConnectionConfig, Instant, KeyGenerator, LocalComponentKey,
@@ -14,6 +13,7 @@ pub use naia_shared::{
     ProtocolKindType, ProtocolType, Replicate, ReplicateSafe, SharedConfig, StandardHeader, Timer,
     Timestamp, WorldMutType, WorldRefType,
 };
+use slotmap::DenseSlotMap;
 
 use super::{
     connection::Connection,
@@ -124,10 +124,8 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Server<P, E> {
     /// Listen at the given addresses
     pub fn listen(&mut self, server_addrs: ServerAddrs) {
         self.socket.listen(server_addrs);
-        self.io.load(
-            self.socket.get_packet_sender(),
-            self.socket.get_packet_receiver(),
-        );
+        self.io
+            .load(self.socket.packet_sender(), self.socket.packet_receiver());
     }
 
     /// Returns whether or not the Server has initialized correctly and is

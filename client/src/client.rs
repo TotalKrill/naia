@@ -102,7 +102,7 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
         let mut socket = Socket::new(self.socket_config.clone());
         socket.connect(server_address);
         self.io
-            .load(socket.get_packet_sender(), socket.get_packet_receiver());
+            .load(socket.packet_sender(), socket.packet_receiver());
     }
 
     /// Returns whether or not a connection has been established with the Server
