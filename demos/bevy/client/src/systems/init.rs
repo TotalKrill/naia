@@ -11,7 +11,7 @@ pub fn init(mut commands: Commands, mut client: Client<Protocol>) {
     info!("Naia Bevy Client Demo started");
 
     client.auth(Auth::new("charlie", "12345"));
-    client.connect(get_server_address());
+    client.connect("http://localhost");
 
     // Setup Camera
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());

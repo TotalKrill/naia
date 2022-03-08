@@ -3,8 +3,8 @@ use std::{collections::VecDeque, hash::Hash, marker::PhantomData, net::SocketAdd
 use naia_client_socket::{Packet, Socket};
 pub use naia_shared::{
     ConnectionConfig, ManagerType, Manifest, PacketReader, PacketType, ProtocolKindType,
-    ProtocolType, ReplicateSafe, SequenceIterator, SharedConfig, StandardHeader, Timer, Timestamp,
-    WorldMutType, WorldRefType,
+    ProtocolType, ReplicateSafe, SequenceIterator, SharedConfig, SocketConfig, StandardHeader,
+    Timer, Timestamp, WorldMutType, WorldRefType,
 };
 
 use super::{
@@ -27,7 +27,7 @@ pub struct Client<P: ProtocolType, E: Copy + Eq + Hash> {
     manifest: Manifest<P>,
     // Connection
     connection_config: ConnectionConfig,
-    socket: Socket,
+    socket_config: SocketConfig,
     io: Io,
     address: Option<SocketAddr>,
     server_connection: Option<Connection<P, E>>,
@@ -54,7 +54,10 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
             client_config.rtt_sample_size,
         );
 
-        let socket = Socket::new(client_config.socket_config);
+        //let socket = Socket::new(client_config.socket_config.clone());
+
+        let mut socket_config = client_config.socket_config.clone();
+        socket_config.link_condition_config = shared_config.link_condition_config.clone();
 
         let handshake_manager = HandshakeManager::new(client_config.send_handshake_interval);
 
@@ -74,8 +77,9 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
             manifest: shared_config.manifest,
             // Connection
             io: Io::new(),
-            socket,
+            //socket,
             connection_config,
+            socket_config,
             address: None,
             server_connection: None,
             handshake_manager,
@@ -96,13 +100,11 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
     }
 
     /// Connect to the given server address
-    pub fn connect(&mut self, server_address: SocketAddr) {
-        self.address = Some(server_address);
-        self.socket.connect(server_address);
-        self.io.load(
-            self.socket.get_packet_sender(),
-            self.socket.get_packet_receiver(),
-        );
+    pub fn connect(&mut self, server_address: &str) {
+        let mut socket = Socket::new(self.socket_config.clone());
+        socket.connect(server_address);
+        self.io
+            .load(socket.get_packet_sender(), socket.get_packet_receiver());
     }
 
     /// Returns whether or not a connection has been established with the Server
