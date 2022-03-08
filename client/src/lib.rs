@@ -38,5 +38,5 @@ pub use client_config::ClientConfig;
 pub use entity_ref::EntityRef;
 pub use error::NaiaClientError;
 pub use event::Event;
-pub use naia_client_socket::Packet;
+pub use naia_client_socket::{Packet, ServerAddr};
 pub use owned_entity::OwnedEntity;

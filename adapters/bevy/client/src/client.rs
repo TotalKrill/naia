@@ -6,7 +6,7 @@ use bevy::ecs::{
     world::{Mut, World},
 };
 
-use naia_client::{Client as NaiaClient, EntityRef, ProtocolType, Replicate};
+use naia_client::{Client as NaiaClient, EntityRef, ProtocolType, Replicate, ServerAddr};
 
 use naia_bevy_shared::{WorldProxy, WorldRef};
 
@@ -47,7 +47,7 @@ impl<'a, P: ProtocolType> Client<'a, P> {
         self.client.connect(server_address);
     }
 
-    pub fn server_address(&self) -> SocketAddr {
+    pub fn server_address(&self) -> ServerAddr {
         return self.client.server_address();
     }
 

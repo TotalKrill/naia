@@ -1,6 +1,6 @@
 use std::{collections::VecDeque, hash::Hash, marker::PhantomData, net::SocketAddr};
 
-use naia_client_socket::{Packet, Socket};
+pub use naia_client_socket::{Packet, ServerAddr, Socket};
 pub use naia_shared::{
     ConnectionConfig, ManagerType, Manifest, PacketReader, PacketType, ProtocolKindType,
     ProtocolType, ReplicateSafe, SequenceIterator, SharedConfig, SocketConfig, StandardHeader,
@@ -29,7 +29,6 @@ pub struct Client<P: ProtocolType, E: Copy + Eq + Hash> {
     connection_config: ConnectionConfig,
     socket_config: SocketConfig,
     io: Io,
-    address: Option<SocketAddr>,
     server_connection: Option<Connection<P, E>>,
     handshake_manager: HandshakeManager<P>,
     // Events
@@ -80,7 +79,6 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
             //socket,
             connection_config,
             socket_config,
-            address: None,
             server_connection: None,
             handshake_manager,
             // Events
@@ -153,10 +151,8 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
     // Connection
 
     /// Get the address currently associated with the Server
-    pub fn server_address(&self) -> SocketAddr {
-        return self
-            .address
-            .expect("Client has not initiated connection to Server yet!");
+    pub fn server_address(&self) -> ServerAddr {
+        return self.io.server_addr();
     }
 
     /// Return whether or not a connection has been established with the Server
@@ -379,8 +375,10 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
                                 .receive_packet(&mut self.tick_manager, packet)
                                 == HandshakeResult::Connected
                             {
-                                let server_connection =
-                                    Connection::new(self.server_address(), &self.connection_config);
+                                let server_connection = Connection::new(
+                                    self.server_address_unwrapped(),
+                                    &self.connection_config,
+                                );
 
                                 self.server_connection = Some(server_connection);
                                 self.outstanding_connect = true;
@@ -396,6 +394,16 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
                 }
             }
         }
+    }
+
+    fn server_address_unwrapped(&self) -> SocketAddr {
+        // NOTE: may panic if the connection is not yet established!
+        return self.io.server_addr_unwrapped();
+    }
+
+    fn server_address_unwrapped_mut(&mut self) -> SocketAddr {
+        // NOTE: may panic if the connection is not yet established!
+        return self.io.server_addr_unwrapped();
     }
 }
 
