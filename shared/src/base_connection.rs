@@ -161,7 +161,7 @@ impl<P: ProtocolType> BaseConnection<P> {
 
     /// Get the address of the remote host
     pub fn get_address(&self) -> SocketAddr {
-        return self.address;
+        return self.address.clone();
     }
 
     /// Get the latest received tick from the remote host

@@ -341,11 +341,11 @@ impl<P: std::fmt::Debug + ProtocolType, E: Copy + Eq + Hash + std::fmt::Debug> C
     fn maintain_socket(&mut self) {
         // receive from socket
         loop {
-            log::debug!("io: {:?}", self.io);
+            log::trace!("io: {:?}", self.io);
             match self.io.receive_packet() {
                 Ok(event) => {
                     if let Some(packet) = event {
-                        log::debug!("Received event: {:?}", packet);
+                        log::trace!("Received event: {:?}", packet);
                         let server_connection_wrapper = self.server_connection.as_mut();
 
                         if let Some(server_connection) = server_connection_wrapper {
@@ -373,7 +373,9 @@ impl<P: std::fmt::Debug + ProtocolType, E: Copy + Eq + Hash + std::fmt::Debug> C
                                 PacketType::Pong => {
                                     server_connection.process_pong(&payload);
                                 }
-                                _ => {} // TODO: explicitly cover these cases
+                                _ => {
+                                    log::debug!("Unhandled packettype");
+                                } // TODO: explicitly cover these cases
                             }
                         } else {
                             if self
