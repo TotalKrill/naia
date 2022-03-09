@@ -32,3 +32,7 @@ members = [
     #"demos/tickless/shared",
     #"demos/tickless/client",
     ]
+[patch.crates-io]
+naia-server-socket = {path="../naia-socket/server"}
+naia-client-socket = {path="../naia-socket/client"}
+naia-socket-shared = {path="../naia-socket/shared"}

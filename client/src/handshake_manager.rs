@@ -2,6 +2,7 @@ use std::time::Duration;
 
 use byteorder::{BigEndian, ReadBytesExt, WriteBytesExt};
 
+use log::debug;
 use naia_client_socket::Packet;
 
 pub use naia_shared::{
@@ -22,6 +23,7 @@ pub enum HandshakeResult {
     Connected,
 }
 
+#[derive(Debug)]
 pub struct HandshakeManager<P: ProtocolType> {
     handshake_timer: Timer,
     pre_connection_timestamp: Option<Timestamp>,
@@ -50,7 +52,7 @@ impl<P: ProtocolType> HandshakeManager<P> {
         }
 
         self.handshake_timer.reset();
-
+        log::debug!("connection_state: {:?}", self.connection_state);
         match self.connection_state {
             ConnectionState::Connected => {
                 // do nothing, not necessary
@@ -121,6 +123,7 @@ impl<P: ProtocolType> HandshakeManager<P> {
         tick_manager: &mut Option<TickManager>,
         packet: Packet,
     ) -> HandshakeResult {
+        debug!("incoming packet: {:?}", packet);
         let (header, payload) = StandardHeader::read(packet.payload());
         match header.packet_type() {
             PacketType::ServerChallengeResponse => {
@@ -160,5 +163,6 @@ impl<P: ProtocolType> HandshakeManager<P> {
 fn internal_send_connectionless(io: &mut Io, packet_type: PacketType, packet: Packet) {
     let new_payload =
         naia_shared::utils::write_connectionless_payload(packet_type, packet.payload());
+    debug!("sending: {:?}", new_payload);
     io.send_packet(Packet::new_raw(new_payload));
 }

@@ -11,6 +11,7 @@ use super::{
 /// able to map Message/Component TypeIds to their representation within
 /// specified enums. Also is able to create new Messages/Components
 /// using registered Builders, given a specific TypeId.
+#[derive(Debug)]
 pub struct Manifest<P: ProtocolType> {
     builder_map: HashMap<P::Kind, Box<dyn ReplicaBuilder<P>>>,
 }

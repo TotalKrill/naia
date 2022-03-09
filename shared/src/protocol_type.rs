@@ -7,7 +7,7 @@ use super::{
 
 /// An Enum with a variant for every Component/Message that can be sent
 /// between Client/Host
-pub trait ProtocolType: Sized + Sync + Send + 'static {
+pub trait ProtocolType: std::fmt::Debug + Sized + Sync + Send + 'static {
     type Kind: ProtocolKindType;
 
     /// Get kind of ReplicateSafe type
@@ -33,7 +33,7 @@ pub trait ProtocolType: Sized + Sync + Send + 'static {
     fn clone(&self) -> Self;
 }
 
-pub trait ProtocolKindType: Eq + Hash + Copy + Send + Sync {
+pub trait ProtocolKindType: std::fmt::Debug + Eq + Hash + Copy + Send + Sync {
     fn to_u16(&self) -> u16;
     fn from_u16(val: u16) -> Self;
     fn to_type_id(&self) -> TypeId;

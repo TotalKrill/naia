@@ -16,6 +16,7 @@ use super::{
     owned_entity::OwnedEntity,
 };
 
+#[derive(Debug)]
 pub struct EntityManager<P: ProtocolType, E: Copy + Eq + Hash> {
     entity_records: HashMap<E, EntityRecord<E, P::Kind>>,
     local_to_world_entity: HashMap<LocalEntity, E>,

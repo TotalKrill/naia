@@ -49,6 +49,7 @@ pub fn replicate_impl(input: proc_macro::TokenStream) -> proc_macro::TokenStream
         use naia_shared::{DiffMask, ReplicaBuilder, PropertyMutate, PacketReader, Replicate, ReplicateSafe, PropertyMutator, ProtocolType, ReplicaDynRef, ReplicaDynMut};
         use #protocol_path::{#protocol_name, #protocol_kind_name};
         #property_enum_definition
+        #[derive(Debug)]
         pub struct #replica_builder_name {
             kind: #protocol_kind_name,
         }

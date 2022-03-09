@@ -3,6 +3,7 @@ use std::time::Duration;
 use naia_shared::{wrapping_diff, Instant};
 
 /// Manages the current tick for the host
+#[derive(Debug)]
 pub struct TickManager {
     tick_interval_millis: f32,
     tick_interval_seconds: f32,

@@ -26,7 +26,7 @@ pub fn protocol_type_impl(input: proc_macro::TokenStream) -> proc_macro::TokenSt
         use std::{any::{Any, TypeId}, ops::{Deref, DerefMut}, sync::RwLock, collections::HashMap};
         use naia_shared::{ProtocolType, ProtocolInserter, ProtocolKindType, ReplicateSafe,
             DiffMask, PacketReader, ReplicaDynRef, ReplicaDynMut, Replicate, Manifest};
-
+        #[derive(Debug)]
         #kind_enum_def
 
         impl #protocol_name {

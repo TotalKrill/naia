@@ -5,13 +5,20 @@ use naia_shared::{ProtocolType, ReplicaRefWrapper, ReplicateSafe, WorldRefType};
 use super::client::Client;
 
 // EntityRef
-pub struct EntityRef<'s, P: ProtocolType, E: Copy + Eq + Hash, W: WorldRefType<P, E>> {
+pub struct EntityRef<
+    's,
+    P: ProtocolType,
+    E: std::fmt::Debug + Copy + Eq + Hash,
+    W: WorldRefType<P, E>,
+> {
     client: &'s Client<P, E>,
     world: W,
     id: E,
 }
 
-impl<'s, P: ProtocolType, E: Copy + Eq + Hash, W: WorldRefType<P, E>> EntityRef<'s, P, E, W> {
+impl<'s, P: ProtocolType, E: std::fmt::Debug + Copy + Eq + Hash, W: WorldRefType<P, E>>
+    EntityRef<'s, P, E, W>
+{
     pub fn new(client: &'s Client<P, E>, world: W, key: &E) -> Self {
         EntityRef {
             client,

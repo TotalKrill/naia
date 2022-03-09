@@ -6,7 +6,7 @@ use crate::{property_mutate::PropertyMutator, wrapping_number::sequence_greater_
 
 /// A Property of an Component/Message, that contains data
 /// which must be tracked for updates
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Property<T: Clone + DeBin + SerBin + PartialEq> {
     inner: T,
     mutator: Option<PropertyMutator>,

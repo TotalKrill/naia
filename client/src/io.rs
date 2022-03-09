@@ -5,6 +5,7 @@ pub use naia_shared::{
     WorldMutType, WorldRefType,
 };
 
+#[derive(Debug)]
 pub struct Io {
     packet_sender: Option<PacketSender>,
     packet_receiver: Option<PacketReceiver>,
@@ -42,7 +43,7 @@ impl Io {
     }
 
     pub fn load(&mut self, packet_sender: PacketSender, packet_receiver: PacketReceiver) {
-        if self.packet_sender.is_some() {
+        if self.is_loaded() {
             panic!("Packet sender/receiver already loaded! Cannot do this twice!");
         }
 
@@ -51,7 +52,7 @@ impl Io {
     }
 
     pub fn is_loaded(&self) -> bool {
-        self.packet_sender.is_some()
+        self.packet_sender.is_some() && self.packet_receiver.is_some()
     }
 
     pub fn send_packet(&mut self, packet: Packet) {

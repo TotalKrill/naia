@@ -7,6 +7,8 @@ pub use naia_shared::{
     Timer, Timestamp, WorldMutType, WorldRefType,
 };
 
+use log::*;
+
 use super::{
     client_config::ClientConfig,
     connection::Connection,
@@ -22,6 +24,7 @@ use super::{
 
 /// Client can send/receive messages to/from a server, and has a pool of
 /// in-scope entities/components that are synced with the server
+#[derive(Debug)]
 pub struct Client<P: ProtocolType, E: Copy + Eq + Hash> {
     // Manifest
     manifest: Manifest<P>,
@@ -40,7 +43,7 @@ pub struct Client<P: ProtocolType, E: Copy + Eq + Hash> {
     phantom_k: PhantomData<E>,
 }
 
-impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
+impl<P: std::fmt::Debug + ProtocolType, E: Copy + Eq + Hash + std::fmt::Debug> Client<P, E> {
     /// Create a new Client
     pub fn new(mut client_config: ClientConfig, shared_config: SharedConfig<P>) -> Self {
         client_config.socket_config.link_condition_config =
@@ -100,6 +103,7 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
     /// Connect to the given server address
     pub fn connect(&mut self, server_address: &str) {
         let mut socket = Socket::new(self.socket_config.clone());
+        debug!("socket: {:?}", socket);
         socket.connect(server_address);
         self.io
             .load(socket.packet_sender(), socket.packet_receiver());
@@ -337,9 +341,11 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
     fn maintain_socket(&mut self) {
         // receive from socket
         loop {
+            log::debug!("io: {:?}", self.io);
             match self.io.receive_packet() {
                 Ok(event) => {
                     if let Some(packet) = event {
+                        log::debug!("Received event: {:?}", packet);
                         let server_connection_wrapper = self.server_connection.as_mut();
 
                         if let Some(server_connection) = server_connection_wrapper {
@@ -400,14 +406,9 @@ impl<P: ProtocolType, E: Copy + Eq + Hash> Client<P, E> {
         // NOTE: may panic if the connection is not yet established!
         return self.io.server_addr_unwrapped();
     }
-
-    fn server_address_unwrapped_mut(&mut self) -> SocketAddr {
-        // NOTE: may panic if the connection is not yet established!
-        return self.io.server_addr_unwrapped();
-    }
 }
 
-fn internal_send_with_connection<P: ProtocolType, E: Copy + Eq + Hash>(
+fn internal_send_with_connection<P: std::fmt::Debug + ProtocolType, E: Copy + Eq + Hash>(
     host_tick: Option<u16>,
     io: &mut Io,
     connection: &mut Connection<P, E>,

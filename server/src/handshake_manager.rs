@@ -48,6 +48,7 @@ impl<P: ProtocolType> HandshakeManager<P> {
         address: &SocketAddr,
         incoming_bytes: &Box<[u8]>,
     ) {
+        log::debug!("receiving: {:?}", incoming_bytes);
         let mut reader = PacketReader::new(incoming_bytes);
         let timestamp = Timestamp::read(&mut reader);
 
@@ -74,8 +75,10 @@ impl<P: ProtocolType> HandshakeManager<P> {
             PacketType::ServerChallengeResponse,
             outgoing_packet.payload(),
         );
-        io.send_packet(Packet::new_raw(outgoing_packet.address(), new_payload));
-        /////////////////////////
+
+        let outgoing_packet = Packet::new_raw(outgoing_packet.address(), new_payload);
+        log::debug!("Outgoing packet address: {:?}", outgoing_packet);
+        io.send_packet(outgoing_packet);
     }
 
     pub fn receive_new_connect_request(
@@ -84,6 +87,7 @@ impl<P: ProtocolType> HandshakeManager<P> {
         address: &SocketAddr,
         incoming_bytes: &Box<[u8]>,
     ) -> HandshakeResult<P> {
+        log::debug!("incoming connection request from address: {:?}", address);
         let mut reader = PacketReader::new(incoming_bytes);
         let timestamp = Timestamp::read(&mut reader);
 

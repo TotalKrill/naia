@@ -12,6 +12,7 @@ use super::{
 
 /// Represents a connection to a remote host, and provides functionality to
 /// manage the connection and the communications to it
+#[derive(Debug)]
 pub struct BaseConnection<P: ProtocolType> {
     address: SocketAddr,
     heartbeat_timer: Timer,

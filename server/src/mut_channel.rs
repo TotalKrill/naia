@@ -7,7 +7,7 @@ use std::{
 use naia_shared::{DiffMask, PropertyMutate};
 
 // MutChannel
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct MutChannel {
     data: Arc<RwLock<MutChannelData>>,
 }
@@ -49,6 +49,7 @@ impl MutChannel {
     }
 }
 
+#[derive(Debug)]
 struct MutChannelData {
     recv_map: HashMap<SocketAddr, MutReceiver>,
     diff_mask_length: u8,
@@ -81,7 +82,7 @@ impl MutChannelData {
 }
 
 // MutReceiver
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct MutReceiver {
     mask: Arc<RwLock<DiffMask>>,
 }
@@ -123,7 +124,7 @@ impl MutReceiver {
 }
 
 // MutSender
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct MutSender {
     channel: MutChannel,
 }

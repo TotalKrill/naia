@@ -13,6 +13,7 @@ use super::{
     tick_manager::TickManager, tick_queue::TickQueue,
 };
 
+#[derive(Debug)]
 pub struct Connection<P: ProtocolType, E: Copy + Eq + Hash> {
     base_connection: BaseConnection<P>,
     entity_manager: EntityManager<P, E>,
